@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.3.xsd
+       http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+
+    <!-- 引入外部的属性文件-->
+    <context:property-placeholder location="classpath:c3p0/c3p0.properties" />
+
+    <!-- 配置 c3p0 连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+        <property name="driverClass" value="${dataSource.driverClass}" />
+        <property name="jdbcUrl" value="${dataSource.jdbcUrl}" />
+        <property name="user" value="${dataSource.user}" />
+        <property name="password" value="${dataSource.password}" />
+    </bean>
+
+    <!-- 配置业务层类 -->
+    <bean id="accountService" class="com.transaction.demo.AccountServiceImpl">
+        <property name="accountDao" ref="accountDao" />
+        <property name="transactionTemplate" ref="transactionTemplate" />
+    </bean>
+
+    <!-- 配置 DAO 层 -->
+    <bean id="accountDao" class="com.transaction.demo.AccountDaoImpl" >
+        <!--<property name="dataSource" ref="dataSource" />-->
+        <property name="jdbcTemplate" ref="jdbcTemplate" />
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!--<context:component-scan base-package="com.chat">-->
+        <!--<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>-->
+    <!--</context:component-scan>-->
+
+    <context:property-override location="classpath:c3p0/c3p0.properties" />
+
+
+    <!-- 配置SqlSessionFactory -->
+    <!--<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+        <!--<property name="dataSource" ref="dataSource"></property>-->
+        <!--<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>-->
+    <!--</bean>-->
+
+    <!-- JDBC事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!-- 配置事务管理的模板，Spring 为了简化事务管理的代码而提供的类 -->
+    <bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+        <property name="transactionManager" ref="transactionManager" />
+    </bean>
+    <!--&lt;!&ndash; 启用支持annotation注解方式事务管理  &ndash;&gt;-->
+    <!--<tx:annotation-driven transaction-manager="transactionManager" />-->
+</beans>
