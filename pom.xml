@@ -19,10 +19,34 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <!-- spring aop 里面已经包含了 aop 联盟的包，所以不需要再另外引入 aopalliance-->
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+            <version>4.3.13.RELEASE</version>
+        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>aopalliance</groupId>-->
+            <!--<artifactId>aopalliance</artifactId>-->
+            <!--<version>1.0</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
             <version>4.3.13.RELEASE</version>
+        </dependency>
+
+        <!--- spring aspect-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>4.3.13.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.13</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
