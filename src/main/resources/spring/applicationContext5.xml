@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.3.xsd
+       http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+
+    <!-- 引入外部的属性文件-->
+    <context:property-placeholder location="classpath:c3p0/c3p0.properties"/>
+
+    <!-- 配置 c3p0 连接池-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${dataSource.driverClass}"/>
+        <property name="jdbcUrl" value="${dataSource.jdbcUrl}"/>
+        <property name="user" value="${dataSource.user}"/>
+        <property name="password" value="${dataSource.password}"/>
+    </bean>
+
+    <!-- 配置业务层类 -->
+    <bean id="user1Service" class="com.transaction.demo5.service.User1ServiceImpl">
+        <property name="user1Dao" ref="user1Dao"/>
+    </bean>
+
+    <bean id="user2Service" class="com.transaction.demo5.service.User2ServiceImpl">
+        <property name="user2Dao" ref="user2Dao"/>
+    </bean>
+
+    <bean id="propagationService" class="com.transaction.demo5.service.PropagationService">
+        <property name="user1Service" ref="user1Service"/>
+        <property name="user2Service" ref="user2Service"/>
+    </bean>
+
+    <!-- 配置 DAO 层 -->
+    <bean id="user1Dao" class="com.transaction.demo5.mapper.User1Dao">
+        <!--<property name="dataSource" ref="dataSource" />-->
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="user2Dao" class="com.transaction.demo5.mapper.User2Dao">
+        <!--<property name="dataSource" ref="dataSource" />-->
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 配置事务管理器，无论是编程式还是声明式的事务管理方式，这个事务管理器都是必须的 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 开启注解事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+</beans>

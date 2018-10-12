@@ -1,0 +1,16 @@
+*.iml
+*.jasper
+*.pyc
+*.pyo
+.*.swp
+.DS_Store
+.classpath
+.idea
+.project
+.ropeproject
+.settings
+/release.properties
+Thumbs.db
+node_modules/
+target/
+test-output/
