@@ -49,6 +49,8 @@
 
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" ref="dataSource"/>
+        <!-- 也可以这么写 -->
+        <!--<constructor-arg name="dataSource" ref="dataSource" />-->
     </bean>
 
     <!-- 配置事务管理器，无论是编程式还是声明式的事务管理方式，这个事务管理器都是必须的 -->
